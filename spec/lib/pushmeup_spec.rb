@@ -2,15 +2,18 @@ require 'spec_helper'
 
 describe Pushmeup do
   describe "APNS" do
+    before do
+      @apns_core = APNS::Core.new(nil,nil,nil,nil)
+    end
     it "should have a APNS object" do
       defined?(APNS).should_not be_false
     end
 
     it "should not forget the APNS default parameters" do
-      APNS.host.should == "gateway.sandbox.push.apple.com"
-      APNS.port.should == 2195
-      APNS.pem.should be_equal(nil)
-      APNS.pass.should be_equal(nil)
+      @apns_core.host.should == "gateway.sandbox.push.apple.com"
+      @apns_core.port.should == 2195
+      @apns_core.pem.should be_equal(nil)
+      @apns_core.pass.should be_equal(nil)
     end
 
     describe "Notifications" do
