@@ -38,7 +38,7 @@ module GCM
     def send_notifications(notifications)
       responses = []
       notifications.each do |n|
-        responses << self.prepare_and_send(n)
+        responses << prepare_and_send(n)
       end
       responses
     end
@@ -57,9 +57,9 @@ module GCM
       end
 
       if self.format == :json
-        self.send_push_as_json(n)
+        send_push_as_json(n)
       elsif self.format == :text
-        self.send_push_as_plain_text(n)
+        send_push_as_plain_text(n)
       else
         raise "Invalid format"
       end
@@ -67,7 +67,7 @@ module GCM
 
     def send_push_as_json(n)
       headers = {
-        'Authorization' => "key=#{ self.key(n.identity) }",
+        'Authorization' => "key=#{ key(n.identity) }",
         'Content-Type' => 'application/json',
       }
       body = {
@@ -77,14 +77,14 @@ module GCM
         :time_to_live => n.time_to_live,
         :delay_while_idle => n.delay_while_idle
       }
-      return self.send_to_server(headers, body.to_json)
+      return send_to_server(headers, body.to_json)
     end
 
     def send_push_as_plain_text(n)
       raise "Still has to be done: http://developer.android.com/guide/google/gcm/gcm.html"
       headers = {
         # TODO: Aceitar key ser um hash
-        'Authorization' => "key=#{ self.key(n.identity) }",
+        'Authorization' => "key=#{ key(n.identity) }",
         'Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8',
       }
       return self.send_to_server(headers, body)
@@ -92,7 +92,7 @@ module GCM
 
     def send_to_server(headers, body)
       params = {:headers => headers, :body => body}
-      response = self.post(self.host, params)
+      response = self.class.post(@host, params)
       return build_response(response)
     end
 
