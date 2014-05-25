@@ -7,10 +7,10 @@ module GCM
     include HTTParty
     attr_accessor :host, :format, :key
 
-    def initialize(host, format, key)
-      @host = host || 'https://android.googleapis.com/gcm/send'
-      @format = format || :json
-      @key = key || nil
+    def initialize(options={})
+      @host = options.delete(:host) || 'https://android.googleapis.com/gcm/send'
+      @format = options.delete(:format) || :json
+      @key = options.delete(:key) || nil
     end
 
     def key(identity = nil)
