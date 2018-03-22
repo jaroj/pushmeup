@@ -28,8 +28,8 @@ module APNS
     def stop_persistence
       @persistent = false
 
-      @ssl.close
-      @sock.close
+      @ssl&.close
+      @sock&.close
     end
 
     def send_notification(device_token, message)
@@ -58,8 +58,8 @@ module APNS
         apns_feedback << { :timestamp => Time.at(f[0]), :token => f[2] }
       end
 
-      ssl.close
-      sock.close
+      ssl&.close
+      sock&.close
 
       return apns_feedback
     end
@@ -80,8 +80,8 @@ module APNS
       rescue StandardError, Errno::EPIPE
         raise unless attempts < @retries
 
-        @ssl.close
-        @sock.close
+        @ssl&.close
+        @sock&.close
 
         attempts += 1
         retry
@@ -89,9 +89,9 @@ module APNS
 
       # Only force close if not persistent
       unless @persistent
-        @ssl.close
+        @ssl&.close
         @ssl = nil
-        @sock.close
+        @sock&.close
         @sock = nil
       end
     end
